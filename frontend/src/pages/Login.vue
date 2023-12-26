@@ -1,28 +1,28 @@
 <script setup lang='ts'>
   import { Lock, User } from '@element-plus/icons-vue';
-  import { reactive } from 'vue';
+  import { reactive, ref } from 'vue';
   import useUserStore from '../store/user';
-  import { LoginData } from '../types/auth';
+  import type { FormInstance } from 'element-plus';
   import { ElMessage } from 'element-plus';
 
+  interface UserInfo {
+    username: string,
+    password: string,
+  }
+
+  const formRef = ref<FormInstance>();
   const userStore = useUserStore();
-  const userInfo = reactive({
+  const userInfo = reactive<UserInfo>({
     username: '',
     password: ''
   });
-  const onSubmit = async ({
-                            errors,
-                            values
-                          }: {
-    errors: Record<string, any> | undefined,
-    values: Record<string, any>
-  }) => {
+  const onSubmit = async (loginForm: FormInstance | undefined) => {
+    if (!loginForm) return;
     try {
-      console.log('===========>>> submit');
-      await userStore.login(values as LoginData);
+      await userStore.login(userInfo);
     } catch (err) {
       ElMessage.error((err as Error).message);
-    }finally {
+    } finally {
 
     }
 
@@ -40,6 +40,7 @@
     <el-row justify='center'>
       <el-form
         status-icon
+        ref='formRef'
         :model='userInfo'
         :style='{width:"40%"}'
       >
@@ -58,7 +59,7 @@
             show-password />
         </el-form-item>
         <el-form-item>
-          <el-button type='primary' @click='onSubmit' long>Login</el-button>
+          <el-button type='primary' long @click='onSubmit(formRef)'>Login</el-button>
           <el-button text>Create an account</el-button>
         </el-form-item>
       </el-form>
