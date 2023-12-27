@@ -9,7 +9,7 @@ export interface HttpResponse<T = unknown> {
   data: T,
 }
 
-axios.defaults.baseURL = 'http://localhost:10280';
+axios.defaults.baseURL = 'http://localhost:10280/';
 
 axios.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {

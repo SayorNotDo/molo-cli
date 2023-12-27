@@ -8,7 +8,10 @@ import (
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
 	"github.com/wailsapp/wails/v2/pkg/options/mac"
+	"go.uber.org/zap"
 	"log"
+	Mlog "molo-cli/backend/pkg/log"
+	"molo-cli/backend/pkg/proof"
 	"molo-cli/backend/router"
 	"net/http"
 	"os/signal"
@@ -19,6 +22,14 @@ import (
 var assets embed.FS
 
 func main() {
+	/* Proof init */
+	proof.MustInitProof()
+
+	/* Logger init */
+	zap.S().Debug("Initializing Logger")
+
+	Mlog.InitLogger()
+
 	/* 创建应用实例 */
 	app := NewApp()
 
